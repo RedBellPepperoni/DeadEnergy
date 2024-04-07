@@ -22,11 +22,11 @@ public:
 
 	// Get the Number of LeftTurns in the Section
 	UFUNCTION(BlueprintCallable)
-	const uint32 GetLeftTurnCount() const noexcept;
+	const int GetLeftTurnCount() const noexcept;
 
 	// Get the Number of RightTurns in the Section
 	UFUNCTION(BlueprintCallable)
-	const uint32 GetRightTurnCount() const noexcept;
+	const int GetRightTurnCount() const noexcept;
 
 	FTransform GetExitTransform() const noexcept;
 
@@ -42,10 +42,10 @@ public:
 protected:
 
 	UPROPERTY(EditDefaultsOnly)
-	uint32 LeftTurns;
+	int LeftTurns;
 
 	UPROPERTY(EditDefaultsOnly)
-	uint32 RightTurns;
+	int RightTurns;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ULevelExit* LevelExit;
