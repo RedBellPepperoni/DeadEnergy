@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Image.h"
+#include "Components/ProgressBar.h"
 #include "PlayerHUD.generated.h"
 
 
@@ -27,23 +28,10 @@ public:
 
 protected:
 
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UImage* DoomLegIcon;
+	UPROPERTY(EditAnywhere)
+	class UProgressBar* DoomLegIcon;
 
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UImage* BoomerangIcon;
+	UPROPERTY(EditAnywhere)
+	class UProgressBar* BoomerangIcon;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UMaterialInterface* IconMaterialParent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UMaterialInstanceDynamic* DoomLegMaterial;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UMaterialInstanceDynamic* BoomerangMaterial;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName ScalarParameterName = FName("Percent");
-
-	
 };

@@ -8,28 +8,17 @@
 
 void UPlayerHUD::NativeConstruct()
 {
-	Super::NativeConstruct();
+	//Super::NativeConstruct();
 
-	if (DoomLegIcon)
-	{
-		DoomLegMaterial = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), IconMaterialParent);
-		DoomLegIcon->SetBrushFromMaterial(DoomLegMaterial);
-	}
-
+	
 }
 
 void UPlayerHUD::UpdateDoomlegCooldownIcon(const float Percent) noexcept
 {
-	if (DoomLegMaterial)
-	{
-		DoomLegMaterial->SetScalarParameterValue(ScalarParameterName, Percent);
-	}
+	DoomLegIcon->SetPercent(Percent);
 }
 
 void UPlayerHUD::UpdateBoomerangCooldownIcon(const float Percent) noexcept
 {
-	if (BoomerangMaterial)
-	{
-		BoomerangMaterial->SetScalarParameterValue(ScalarParameterName, Percent);
-	}
+	BoomerangIcon->SetPercent(Percent);
 }
