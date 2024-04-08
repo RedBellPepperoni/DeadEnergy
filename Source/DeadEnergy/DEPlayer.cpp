@@ -73,11 +73,17 @@ void ADEPlayer::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPr
 
 void ADEPlayer::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) noexcept
 {
+	
+
+	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Red, FString::Printf(TEXT("Jump Pad Touched")));
+
 	if (OtherComp->ComponentHasTag(JumpPadTag))
 	{
 		const float ForceMultiplier = 0.6f;
 		const float LaunchForce = FMath::Abs(MovementComponent->Velocity.Z) * ForceMultiplier + JumpPadAdditionalForce;
 		LaunchCharacter(FVector(0, 0, LaunchForce), false, true);
+
+		
 	}
 }
 
