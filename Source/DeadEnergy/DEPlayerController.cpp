@@ -14,12 +14,12 @@ void ADEPlayerController::TogglePause() noexcept
 
 void ADEPlayerController::UpdateDoomLegIconHudWidget(const float Percent) noexcept
 {
-    HudWidget->UpdateDoomlegCooldownIcon(Percent);
+  //  HudWidget->UpdateDoomlegCooldownIcon(Percent);
 }
 
 void ADEPlayerController::UpdateBoomerangIconHudWidget(const float Percent) noexcept
 {
-    HudWidget->UpdateBoomerangCooldownIcon(Percent);
+   // HudWidget->UpdateBoomerangCooldownIcon(Percent);
 }
 
 void ADEPlayerController::TeleportToSpawn() const noexcept
@@ -57,6 +57,7 @@ void ADEPlayerController::BeginPlay()
 
     DecideSpawnLocation();
    
+    CreateWidgets();
 
     HudWidget->AddToPlayerScreen();
 
@@ -68,10 +69,10 @@ void ADEPlayerController::CreateWidgets() noexcept
 
     HudWidget = CreateWidget<UPlayerHUD>(this, HudWidgetClass);
 
-    if (PauseWidgetClass)
+   /* if (PauseWidgetClass)
     {
         PauseWidget = CreateWidget<UUserWidget>(this, PauseWidgetClass);
-    }
+    }*/
 
 }
 

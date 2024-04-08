@@ -76,7 +76,7 @@ private:
 
 	UPROPERTY()
 	UPlayerHUD* HudWidget;
-	UPROPERTY()
-	UUserWidget* PauseWidget;
+	/*UPROPERTY()
+	UUserWidget* PauseWidget;*/
 
 };

@@ -151,6 +151,9 @@ void ADEPlayer::Look(const FInputActionValue& IAValue) noexcept
 	const FVector2D LookVector = IAValue.Get<FVector2D>();
 	AddControllerYawInput(LookVector.X * MouseXSensitivity);
 	AddControllerPitchInput(LookVector.Y * MouseYSensitivity * -1);
+
+	
+
 }
 
 void ADEPlayer::InputJump() noexcept
