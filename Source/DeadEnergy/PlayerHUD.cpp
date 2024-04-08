@@ -8,7 +8,7 @@
 
 void UPlayerHUD::NativeConstruct()
 {
-	//Super::NativeConstruct();
+	Super::NativeConstruct();
 
 	
 }

@@ -29,9 +29,9 @@ public:
 protected:
 
 	UPROPERTY(EditAnywhere)
-	class UProgressBar* DoomLegIcon;
+	UProgressBar* DoomLegIcon;
 
 	UPROPERTY(EditAnywhere)
-	class UProgressBar* BoomerangIcon;
+	UProgressBar* BoomerangIcon;
 
 };
