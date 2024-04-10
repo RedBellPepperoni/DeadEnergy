@@ -89,6 +89,8 @@ private:
 	UFUNCTION(Category = "Input Response")
 	void DoomLegJump() noexcept;
 	UFUNCTION(Category = "Input Response")
+	void DoomLegCharge() noexcept;
+	UFUNCTION(Category = "Input Response")
 	void CrouchSlideStarted() noexcept;
 	UFUNCTION(Category = "Input Response")
 	void CrouchSlideTriggered() noexcept;
@@ -216,6 +218,11 @@ private:
 	FVector WallRunDirection;
 
 	TEnumAsByte<WallRunSide> CurrentSide;
+
+	// Kick Data
+	bool isCharging = false;
+	float powerBuilt = 0.0f;
+
 
 	float YWalkAxis;
 	float SlideSpeedDifference;

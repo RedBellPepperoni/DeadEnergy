@@ -186,27 +186,75 @@ void ADEPlayer::InputJump() noexcept
 	}
 }
 
+void ADEPlayer::DoomLegCharge() noexcept
+{
+	isCharging = true;
+}
+
 void ADEPlayer::DoomLegJump() noexcept
 {
+// 	if (!bDoomLegOnCooldown)
+// 	{
+// 		bDoomLegOnCooldown = true;
+// 		uint32 DoomLegForce;
+// 
+// 		if (MovementComponent->IsFalling())
+// 		{
+// 			DoomLegForce = 2550; // Dash is stronger if player is not in air
+// 		}
+// 		else
+// 		{
+// 			DoomLegForce = 2700;
+// 		}
+// 		LaunchCharacter(GetControlRotation().Vector() * DoomLegForce, true, true);
+// 		ADEPlayerController* PlayerController = Cast<ADEPlayerController>(GetController());
+// 		GetWorldTimerManager().SetTimer(DoomLegRecharge, [this, PlayerController]() { PlayerController->UpdateDoomLegIconHudWidget((DoomLegCooldown - GetWorldTimerManager().GetTimerRemaining(ResetDoomLegCharge)) / DoomLegCooldown); }, 0.01f, true);
+// 		GetWorldTimerManager().SetTimer(ResetDoomLegCharge, [this, PlayerController]() { GetWorldTimerManager().ClearTimer(DoomLegRecharge); PlayerController->UpdateDoomLegIconHudWidget(0.f); }, DoomLegCooldown, false);
+// 		GetWorldTimerManager().SetTimer(DoomLegTimerHandle, [this]() {bDoomLegOnCooldown = false; }, DoomLegCooldown, false);
+// 	}
 	if (!bDoomLegOnCooldown)
 	{
-		bDoomLegOnCooldown = true;
+		FHitResult HitResult;
+		//bDoomLegOnCooldown = true;
 		uint32 DoomLegForce;
+
+		// Rat=y trace out from the lower player model in the direction they're looking
+		const uint32 TraceLength = 200;
+		FVector traceFrom = GetActorLocation() - FVector(0, 0, 44);
+		const FVector TraceEnd = traceFrom + GetControlRotation().Vector() * TraceLength;
+		const bool isKickableSurface = GetWorld()->LineTraceSingleByChannel(HitResult, traceFrom, TraceEnd, ECC_Visibility, FCollisionQueryParams(FName(NAME_None), false, this));
+
+		if (!isKickableSurface) // Kick misses, lose built power
+		{
+			isCharging = false;
+			powerBuilt = 0.0f;
+			return;
+		}
+		bDoomLegOnCooldown = true; // Only put on cooldown if kick lands
+		powerBuilt = powerBuilt > 1.0f ? 1.0f : powerBuilt;
 
 		if (MovementComponent->IsFalling())
 		{
-			DoomLegForce = 2550; // Dash is stronger if player is not in air
+			DoomLegForce = 1200 * powerBuilt;
 		}
 		else
 		{
-			DoomLegForce = 2700;
+			DoomLegForce = 1500 * powerBuilt;
 		}
-		LaunchCharacter(GetControlRotation().Vector() * DoomLegForce, true, true);
+		// Add our look direction into the mix, but give it less weight
+		FVector finalKickAngle = HitResult.ImpactNormal * 2.0f - GetControlRotation().Vector();
+		finalKickAngle.Normalize(1.0f);
+
+		// Add new velocity to current velocity
+		LaunchCharacter(finalKickAngle * DoomLegForce + GetVelocity(), true, true);
+
 		ADEPlayerController* PlayerController = Cast<ADEPlayerController>(GetController());
 		GetWorldTimerManager().SetTimer(DoomLegRecharge, [this, PlayerController]() { PlayerController->UpdateDoomLegIconHudWidget((DoomLegCooldown - GetWorldTimerManager().GetTimerRemaining(ResetDoomLegCharge)) / DoomLegCooldown); }, 0.01f, true);
 		GetWorldTimerManager().SetTimer(ResetDoomLegCharge, [this, PlayerController]() { GetWorldTimerManager().ClearTimer(DoomLegRecharge); PlayerController->UpdateDoomLegIconHudWidget(0.f); }, DoomLegCooldown, false);
 		GetWorldTimerManager().SetTimer(DoomLegTimerHandle, [this]() {bDoomLegOnCooldown = false; }, DoomLegCooldown, false);
 	}
+	isCharging = false;
+	powerBuilt = 0.0f;
 }
 
 void ADEPlayer::CrouchSlideStarted() noexcept
@@ -463,6 +511,12 @@ void ADEPlayer::Tick(float DeltaTime)
 		}
 	}
 
+	// Charge up the kick if the player is charging it
+	if (isCharging) // Lets say 1.5s is full charge
+	{
+		powerBuilt += DeltaTime / 1.5f;
+	}
+
 }
 
 // Called to bind functionality to input
@@ -493,7 +547,9 @@ void ADEPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 		if (IADoomLegCharge)
 		{
-			PlayerEnhancedInputComponent->BindAction(IADoomLegCharge, ETriggerEvent::Started, this, &ADEPlayer::DoomLegJump);
+			//PlayerEnhancedInputComponent->BindAction(IADoomLegCharge, ETriggerEvent::Started, this, &ADEPlayer::DoomLegJump);
+			PlayerEnhancedInputComponent->BindAction(IADoomLegCharge, ETriggerEvent::Triggered, this, &ADEPlayer::DoomLegCharge);
+			PlayerEnhancedInputComponent->BindAction(IADoomLegCharge, ETriggerEvent::Completed, this, &ADEPlayer::DoomLegJump);
 		}
 
 		if (IACrouchSlide)
