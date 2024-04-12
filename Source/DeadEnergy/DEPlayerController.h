@@ -27,6 +27,7 @@ public:
 	void UpdateDoomLegIconHudWidget(const float Percent) noexcept;
 	void UpdateBoomerangIconHudWidget(const float Percent) noexcept;
 
+	UFUNCTION(BlueprintCallable)
 	void TeleportToSpawn() const noexcept;
 	FVector GetPlayerSpawnLocation() const noexcept;
 
@@ -36,16 +37,28 @@ public:
 
 
 	void ShowTimeWidget() noexcept;
+
 	void HideTimeWidget() noexcept;
 
+	UFUNCTION(BlueprintCallable, Category = "Widgets")
 	void ShowDeathWidget() noexcept;
+	UFUNCTION(BlueprintCallable, Category = "Widgets")
 	void HideDeathWidget() noexcept;
+
+	UFUNCTION(BlueprintCallable, Category = "Widgets")
+	void ShowEndWidget() noexcept;
+	UFUNCTION(BlueprintCallable, Category = "Widgets")
+	void HideEndWidget() noexcept;
 
 protected:
 	virtual void BeginPlay() override;
 
 private:
 	void CreateWidgets() noexcept;
+
+	void ShowWidgetToFocus(UUserWidget* WidgetToShow) noexcept;
+	void HideFocusedWidget(UUserWidget* WidgetToHide) noexcept;
+
 	void ShowWidgetAndPause(UUserWidget* WidgetToShow) noexcept;
 	void HideWidgetAndUnpause(UUserWidget* WidgetToHide) noexcept;
 	void DecideSpawnLocation() noexcept;
@@ -68,6 +81,10 @@ protected:
 	TSubclassOf<UUserWidget> DeathWidgetClass;
 
 
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
+	TSubclassOf<UUserWidget> EndWidgetClass;
+
+
 private:
 
 	FVector PlayerSpawnLocation;
@@ -76,6 +93,11 @@ private:
 
 	UPROPERTY()
 	UPlayerHUD* HudWidget;
+
+	UPROPERTY()
+	UUserWidget* DeathWidget;
+	UPROPERTY()
+	UUserWidget* EndWidget;
 	/*UPROPERTY()
 	UUserWidget* PauseWidget;*/
 
